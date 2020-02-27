@@ -1,0 +1,23 @@
+{
+  "wifi": [
+    {
+      "ssid": "FIRST_WIFI_SSID",
+      "password": "FIRST_WIFI_PASSWORD",
+      "timeout": 30
+    },
+    {
+      "ssid": "SECOND_WIFI_SSID",
+      "password": "SECOND_WIFI_PASSWORD",
+      "timeout": 30
+    }
+  ],
+  "thingsboard": {
+    "thingsboard": {
+      "host": "demo.thingsboard.io",
+      "port": 1883,
+      "security":{
+        "accessToken": "YOUR_GW_TOKEN_FROM_THINGSBOARD"
+      }
+    }
+  }
+}
