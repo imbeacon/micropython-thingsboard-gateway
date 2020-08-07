@@ -1,11 +1,11 @@
 from mqtt_client import MQTTClient
 
-RPC_RESPONSE_TOPIC = b'/v1/devices/me/rpc/response/'
-RPC_REQUEST_TOPIC = b'/v1/devices/me/rpc/request/'
-ATTRIBUTES_TOPIC = b'/v1/devices/me/attributes'
-ATTRIBUTES_TOPIC_REQUEST = b'/v1/devices/me/attributes/request/'
-ATTRIBUTES_TOPIC_RESPONSE = b'/v1/devices/me/attributes/response/'
-TELEMETRY_TOPIC = b'/v1/devices/me/telemetry'
+RPC_RESPONSE_TOPIC = '/v1/devices/me/rpc/response/'.encode('UTF-8')
+RPC_REQUEST_TOPIC = '/v1/devices/me/rpc/request/'.encode('UTF-8')
+ATTRIBUTES_TOPIC = '/v1/devices/me/attributes'.encode('UTF-8')
+ATTRIBUTES_TOPIC_REQUEST = '/v1/devices/me/attributes/request/'.encode('UTF-8')
+ATTRIBUTES_TOPIC_RESPONSE = '/v1/devices/me/attributes/response/'.encode('UTF-8')
+TELEMETRY_TOPIC = '/v1/devices/me/telemetry'.encode('UTF-8')
 
 class TBTimeoutException(Exception):
     pass
@@ -56,4 +56,17 @@ class TBClient(object):
             print("subscribing to %s topic..." % service_topic)
             self._client.subscribe(service_topic, 0)
             print("Subscribed")
-            break
+
+    def send_telemetry(self, msg, qos=1):
+        self._client.publish(TELEMETRY_TOPIC, msg, qos=qos)
+
+if __name__ == '__main__':
+    try:
+        from simplejson import load
+        config = None
+        with open("config.json", "r") as config_file:
+            config = load(config_file)
+        client = TBClient(config["thingsboard"])
+        client.connect()
+    except Exception as e:
+        print(e)

@@ -147,7 +147,7 @@ class MQTTClient:
         pkt = bytearray(b"\x82\0\0\0")
         self.pid += 1
         struct.pack_into("!BH", pkt, 1, 2 + 2 + len(topic) + 1, self.pid)
-        print(hex(len(pkt)), hexlify(pkt, ":"))
+        # print(hex(len(pkt)), hexlify(pkt, ":"))
         self.sock.write(pkt)
         self._send_str(topic)
         self.sock.write(qos.to_bytes(1, "little"))
@@ -155,7 +155,6 @@ class MQTTClient:
             op = self.wait_msg()
             if op == 0x92:
                 resp = self.sock.read(4)
-                print('158',resp)
                 assert resp[1] == pkt[2] and resp[2] == pkt[3]
                 if resp[3] == 0x80:
                     print("MQTT Exception")
@@ -167,10 +166,7 @@ class MQTTClient:
     # set by .set_callback() method. Other (internal) MQTT
     # messages processed internally.
     def wait_msg(self):
-        print("First wait message")
         res = self.sock.read(1)
-        print(res)
-        print("After sock read")
         self.sock.setblocking(True)
         if res is None:
             return None
@@ -183,7 +179,6 @@ class MQTTClient:
         op = res[0]
         if op & 0xf0 != 0x30:
             return op
-        print("wait_msg")
         sz = self._recv_len()
         topic_len = self.sock.read(2)
         topic_len = (topic_len[0] << 8) | topic_len[1]

@@ -12,12 +12,10 @@
     }
   ],
   "thingsboard": {
-    "thingsboard": {
-      "host": "demo.thingsboard.io",
-      "port": 1883,
-      "security":{
-        "accessToken": "YOUR_GW_TOKEN_FROM_THINGSBOARD"
-      }
+    "host": "192.168.188.181",
+    "port": 1883,
+    "security":{
+      "accessToken": "gateway"
     }
   }
 }

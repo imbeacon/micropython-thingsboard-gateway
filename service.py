@@ -15,7 +15,6 @@
 from ujson import load, loads
 from network import WLAN, STA_IF
 from utime import time, sleep
-import uasyncio
 
 
 class Config(object):
@@ -51,20 +50,21 @@ class WIFIConnector(object):
         self.connection.active(True)
         self._networks = wifi_settings
 
-    def connect(self):
-        self.connection_thread = _thread.start_new_thread(self.__connect)
+    # def connect(self):
+    #     self.connection_thread = _thread.start_new_thread(self.__connect)
 
-    def __connect(self):
-        while True:
-            try:
-                if not self.connection.isconnected():
-                    start_connection_time = time()
-                    for network in self._networks:
-                        while time() - start_connection_time < network.get("timeout", 60):
-                            self.connection.connect(ssid=network["ssid"], password=network["password"])
-                            if self.connection.isconnected():
-                                break
-                else:
-                    sleep(1)
-            except Exception as e:
-                print(e)
+    def connect(self):
+        try:
+            if not self.connection.isconnected():
+                start_connection_time = time()
+                for network in self._networks:
+                    while time() - start_connection_time < network.get("timeout", 60):
+                        self.connection.connect(network["ssid"], network["password"])
+                        if self.connection.isconnected():
+                            break
+                    if self.connection.isconnected():
+                        break
+            else:
+                sleep(1)
+        except Exception as e:
+            print(e)
